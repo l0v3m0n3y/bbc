@@ -36,7 +36,7 @@ public class Bbc {
 
     }
     
-    public func get_news_list(path: String) async throws -> Any {
+    public func get_news_list(path: String) async throws -> [String: Any] {
         guard let url = URL(string: "\(api)/xd/page/content?path=\(path)") else {
             throw NSError(domain: "Invalid URL", code: -1)
         }
