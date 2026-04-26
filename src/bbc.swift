@@ -47,7 +47,7 @@ public class Bbc {
         return try JSONSerialization.jsonObject(with: data)
     }
     
-    public func get_news_by_assetId(type: String="live-header",assetId: String,language: String ="en-GB",showMedia: Bool=true) async throws -> Any {
+    public func get_news_by_assetId(type: String="live-header",assetId: String,language: String = "en-GB",showMedia: Bool=true) async throws -> Any {
         guard let url = URL(string: "\(api)/wc-poll-data/container/\(type)?assetId=\(assetId)&globalContainerPolling=true&isInternational=true&isTipoPage=true&language=\(language)&liveExperienceCrowdCount=true&showMedia=\(showMedia)&uasEnv=live") else {
             throw NSError(domain: "Invalid URL", code: -1)
         }
