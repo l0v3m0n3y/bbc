@@ -13,7 +13,7 @@ public class Bbc {
         ]
     }
     
-    public func get_news_list(path: String) async throws -> [String: Any] {
+    public func get_news_list(path: String)  async throws -> Any {
         guard let url = URL(string: "\(api)/xd/page/content?path=\(path)") else {
             throw NSError(domain: "Invalid URL", code: -1)
         }
@@ -29,7 +29,7 @@ public class Bbc {
         return json
     }
     
-    public func get_news_by_assetId(type: String = "live-header", assetId: String, language: String = "en-GB", showMedia: Bool = true) async throws -> [String: Any] {
+    public func get_news_by_assetId(type: String = "live-header", assetId: String, language: String = "en-GB", showMedia: Bool = true)  async throws -> Any {
         let urlString = "\(api)/wc-poll-data/container/\(type)?assetId=\(assetId)&globalContainerPolling=true&isInternational=true&isTipoPage=true&language=\(language)&liveExperienceCrowdCount=true&showMedia=\(showMedia)&uasEnv=live"
         
         guard let url = URL(string: urlString) else {
