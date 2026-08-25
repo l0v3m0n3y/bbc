@@ -35,26 +35,43 @@ public class Bbc {
         ]
 
     }
-    
-    public func get_news_list(path: String) async throws -> Any {
-        guard let url = URL(string: "\(api)/xd/page/content?path=\(path)") else {
+
+
+    private func fetchJSON(from urlString: String,method: HTTPMethod = .get,body: Data? = nil,queryParameters: [String: String]? = nil) async throws -> Any {
+        var urlComponents = URLComponents(string: urlString)
+        if let queryParameters = queryParameters {
+            urlComponents?.queryItems = queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+        }
+        guard let url = urlComponents?.url else {
             throw NSError(domain: "Invalid URL", code: -1)
         }
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
+        if let body = body {
+            request.httpBody = body
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
         let (data, _) = try await URLSession.shared.data(for: request)
         return try JSONSerialization.jsonObject(with: data)
     }
     
+    public func get_news_list(path: String) async throws -> Any {
+        return try await fetchJSON(from: "\(api)/xd/page/content?path=\(path)")
+    }
+    
     public func get_news_by_assetId(type: String="live-header",assetId: String,language: String = "en-GB",showMedia: Bool=true) async throws -> Any {
-        guard let url = URL(string: "\(api)/wc-poll-data/container/\(type)?assetId=\(assetId)&globalContainerPolling=true&isInternational=true&isTipoPage=true&language=\(language)&liveExperienceCrowdCount=true&showMedia=\(showMedia)&uasEnv=live") else {
-            throw NSError(domain: "Invalid URL", code: -1)
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-        let (data, _) = try await URLSession.shared.data(for: request)
-        return try JSONSerialization.jsonObject(with: data)
+        let urlString = "\(api)/wc-poll-data/container/\(type)"
+        let queryParameters: [String: String] = [
+            "assetId": assetId,
+            "globalContainerPolling": "true",
+            "isInternational": "true",
+            "isTipoPage": "true",
+            "language": language,
+            "liveExperienceCrowdCount": "true",
+            "showMedia": String(showMedia),
+            "uasEnv": "live"
+       ]
+        return try await fetchJSON(from: urlString,method: .get,queryParameters: queryParameters)
     }
 }
