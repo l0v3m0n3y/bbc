@@ -20,6 +20,14 @@ extension URLSession {
     }
 }
 
+public enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+    case patch = "PATCH"
+}
+
 public class Bbc {
     private let api = "https://web-cdn.api.bbci.co.uk"
     private var headers: [String: String]
@@ -56,11 +64,11 @@ public class Bbc {
         return try JSONSerialization.jsonObject(with: data)
     }
     
-    public func get_news_list(path: String) async throws -> Any {
+    public func getNewsList(path: String) async throws -> Any {
         return try await fetchJSON(from: "\(api)/xd/page/content?path=\(path)")
     }
     
-    public func get_news_by_assetId(type: String="live-header",assetId: String,language: String = "en-GB",showMedia: Bool=true) async throws -> Any {
+    public func getNewsByAssetId(type: String="live-header",assetId: String,language: String = "en-GB",showMedia: Bool=true) async throws -> Any {
         let urlString = "\(api)/wc-poll-data/container/\(type)"
         let queryParameters: [String: String] = [
             "assetId": assetId,
