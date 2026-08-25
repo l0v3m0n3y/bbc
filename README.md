@@ -7,7 +7,7 @@ import bbc
 let client = Bbc()
 
 do {
-    let news = try await client.get_news_list(path:"/news/videos/ckgerdnvm2xo")
+    let news = try await client.getNewsList(path:"/news/videos/ckgerdnvm2xo")
     print(news)
 } catch {
     print("Error: \(error)")
